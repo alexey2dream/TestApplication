@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TestApplication.Infrastructure.Databases.Write;
+
 namespace TestApplication
 {
     public class Program
@@ -71,7 +74,18 @@ namespace TestApplication
 
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddScoped<AppDbContext>();
+
+
             var app = builder.Build();
+
+
+            if (app.Environment.IsDevelopment())
+            {
+                using var scope = app.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                dbContext.Database.Migrate();
+            }
 
             app.Run();
         }
