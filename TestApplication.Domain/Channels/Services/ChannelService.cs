@@ -35,5 +35,13 @@ namespace TestApplication.Domain.Channels.Services
                 return result;
             return result;
         }
+
+        public Result Delete(User user, Channel channel)
+        {
+            var deleteResult = user.DeleteChannel(channel);
+            if (!deleteResult.IsSuccess)
+                return deleteResult;
+            return deleteResult;
+        }
     }
 }

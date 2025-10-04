@@ -43,5 +43,12 @@ namespace TestApplication.Domain.Users.Models
             createdChats.Remove(chat);
             return Result.Success();
         }
+        internal Result DeleteChannel(Channel channel)
+        {
+            if (channel.CreatorId != Id)
+                return Result.Failure("User not created that channel!");
+            Channel = null;
+            return Result.Success();
+        }
     }
 }

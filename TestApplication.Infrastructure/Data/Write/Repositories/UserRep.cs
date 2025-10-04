@@ -20,6 +20,7 @@ namespace TestApplication.Infrastructure.Data.Write.Repositories
         public async Task<User> GetById(int id, CancellationToken token = default)
         {
             return await context.Users
+                .Include(u => u.Channel)
                 .Where(u => u.Id == id)
                 .FirstOrDefaultAsync(token);
         }

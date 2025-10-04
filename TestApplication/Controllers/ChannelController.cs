@@ -2,7 +2,9 @@
 using TestApplication.UseCase.Abstractions.Messaging;
 using TestApplication.UseCase.Channels.Commands.ChangeTitleChannelCommand;
 using TestApplication.UseCase.Channels.Commands.CreateChannelCommand;
+using TestApplication.UseCase.Channels.Commands.DeleteChannelCommand;
 using TestApplication.UseCase.Chats.Commands.CreateChatCommand;
+using TestApplication.UseCase.Chats.Commands.DeleteChatCommand;
 using TestApplication.UseCase.Chats.Commands.UpdateChatTitleCommand;
 
 namespace TestApplication.Controllers
@@ -26,6 +28,17 @@ namespace TestApplication.Controllers
         public async Task<IActionResult> UpdateTitle(
             [FromBody] ChangeTitleChannelCommand command,
             [FromServices] ICommandHandler<ChangeTitleChannelCommand> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(command, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return NoContent();
+        }
+        [HttpDelete]
+        public async Task<IActionResult> Delete(
+            [FromQuery] DeleteChannelCommand command,
+            [FromServices] ICommandHandler<DeleteChannelCommand> handler,
             CancellationToken token)
         {
             var result = await handler.Handle(command, token);
