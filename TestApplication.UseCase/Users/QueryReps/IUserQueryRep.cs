@@ -10,5 +10,6 @@ namespace TestApplication.UseCase.Users.QueryReps
     public interface IUserQueryRep
     {
         Task<List<UserResponse>> GetAll(int pageNum, int pageSize, CancellationToken token = default);
+        Task<UserResponse> GetById(int id, CancellationToken token);
     }
 }

@@ -6,6 +6,7 @@ using TestApplication.UseCase.Users.Commands.ChangeUserUsernameCommand;
 using TestApplication.UseCase.Users.Commands.CreateUserCommand;
 using TestApplication.UseCase.Users.DTO;
 using TestApplication.UseCase.Users.Queries.GetAllUsersQuery;
+using TestApplication.UseCase.Users.Queries.GetUserByIdQuery;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace TestApplication.Controllers
@@ -18,6 +19,17 @@ namespace TestApplication.Controllers
         public async Task<IActionResult> GetAll(
             [FromQuery]GetAllUsersQuery query,
             [FromServices] IQueryHandler<GetAllUsersQuery, List<UserResponse>> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(query, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return Ok(result.Value);
+        }
+        [HttpGet("ById")]
+        public async Task<IActionResult> GetById(
+            [FromQuery]GetUserByIdQuery query,
+            [FromServices] IQueryHandler<GetUserByIdQuery, UserResponse> handler,
             CancellationToken token)
         {
             var result = await handler.Handle(query, token);

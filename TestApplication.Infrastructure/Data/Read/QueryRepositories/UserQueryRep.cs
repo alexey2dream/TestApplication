@@ -29,5 +29,18 @@ namespace TestApplication.Infrastructure.Data.Read.QueryRepositories
                 Offset = (pageNum - 1) * pageSize});
             return users.ToList();
         }
+        public async Task<UserResponse> GetById(int id, CancellationToken token)
+        {
+            using var connection = await connectionFactory.CreateConnection(token);
+            string sql = """
+                select * from "Users"
+                where "Id" = @Id;
+                """;
+            var user = await connection.QueryAsync<UserResponse>(sql, new
+            {
+                Id = id
+            });
+            return user.FirstOrDefault();
+        }
     }
 }
