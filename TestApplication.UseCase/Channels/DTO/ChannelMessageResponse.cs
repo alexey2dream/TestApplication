@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace TestApplication.UseCase.Channels.DTO
 {
-    public class ChannelResponse
+    public class ChannelMessageResponse
     {
         public int Id { get; set; }
-        public string Title { get; set; }
-        public int CreatorId { get; set; }
+        public string Text { get; set; }
+        public DateTime SendingTime { get; set; }
     }
 }

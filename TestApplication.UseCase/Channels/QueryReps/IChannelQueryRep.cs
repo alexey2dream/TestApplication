@@ -11,5 +11,6 @@ namespace TestApplication.UseCase.Channels.QueryReps
     public interface IChannelQueryRep
     {
         Task<List<ChannelResponse>> GetAllByUserId(int pageNum, int pageSize, CancellationToken token);
+        Task<ChannelInfoResponse> GetAllMessageByChannelId(int channelId, CancellationToken token);
     }
 }
