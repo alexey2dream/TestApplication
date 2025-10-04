@@ -42,5 +42,14 @@ namespace TestApplication.Infrastructure.Data.Read.QueryRepositories
             });
             return user.FirstOrDefault();
         }
+
+        public async Task<int> GetTotalAmountUsers()
+        {
+            using var connection = await connectionFactory.CreateConnection();
+            string sql = """
+                select count(*) from "Users";
+                """;
+            return await connection.QuerySingleAsync<int>(sql);
+        }
     }
 }

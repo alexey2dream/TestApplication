@@ -6,6 +6,7 @@ using TestApplication.UseCase.Users.Commands.ChangeUserUsernameCommand;
 using TestApplication.UseCase.Users.Commands.CreateUserCommand;
 using TestApplication.UseCase.Users.DTO;
 using TestApplication.UseCase.Users.Queries.GetAllUsersQuery;
+using TestApplication.UseCase.Users.Queries.GetTotalAmountUsersQuery;
 using TestApplication.UseCase.Users.Queries.GetUserByIdQuery;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -15,6 +16,16 @@ namespace TestApplication.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        [HttpGet("TotalAmount")]
+        public async Task<IActionResult> GetTotalAmount(
+            [FromServices] IQueryHandler<GetTotalAmountUsersQuery, int> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(new GetTotalAmountUsersQuery(), token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return Ok(result.Value);
+        }
         [HttpGet("All")]
         public async Task<IActionResult> GetAll(
             [FromQuery]GetAllUsersQuery query,

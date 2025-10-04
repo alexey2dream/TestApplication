@@ -12,5 +12,7 @@ namespace TestApplication.UseCase.Channels.QueryReps
     {
         Task<List<ChannelResponse>> GetAllByUserId(int pageNum, int pageSize, CancellationToken token);
         Task<ChannelInfoResponse> GetAllMessageByChannelId(int channelId, CancellationToken token);
+        Task<int> GetTotalAmountChannels(CancellationToken token);
+        Task<int> GetTotalAmountMessagesByChannelId(int channelId, CancellationToken token);
     }
 }

@@ -8,6 +8,8 @@ using TestApplication.UseCase.Channels.Commands.DeleteChannelMessageCommand;
 using TestApplication.UseCase.Channels.DTO;
 using TestApplication.UseCase.Channels.Queries.GetAllChannelsQuery;
 using TestApplication.UseCase.Channels.Queries.GetAllMessagesByChannelQuery;
+using TestApplication.UseCase.Channels.Queries.GetTotalAmountChannelsQuery;
+using TestApplication.UseCase.Channels.Queries.GetTotalAmountMessagesByChannel;
 using TestApplication.UseCase.Chats.Commands.CreateChatCommand;
 using TestApplication.UseCase.Chats.Commands.CreateChatMessageCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatCommand;
@@ -17,6 +19,7 @@ using TestApplication.UseCase.Chats.DTO;
 using TestApplication.UseCase.Chats.Queries.GetAllMessagesByChatQuery;
 using TestApplication.UseCase.Users.DTO;
 using TestApplication.UseCase.Users.Queries.GetAllUsersQuery;
+using TestApplication.UseCase.Users.Queries.GetTotalAmountUsersQuery;
 
 namespace TestApplication.Controllers
 {
@@ -24,6 +27,27 @@ namespace TestApplication.Controllers
     [ApiController]
     public class ChannelController : ControllerBase
     {
+        [HttpGet("TotalAmount")]
+        public async Task<IActionResult> GetTotalAmount(
+            [FromServices] IQueryHandler<GetTotalAmountChannelsQuery, int> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(new GetTotalAmountChannelsQuery(), token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return Ok(result.Value);
+        }
+        [HttpGet("Messages/TotalAmount")]
+        public async Task<IActionResult> GetMessageTotalAmountByChannel(
+            [FromQuery] GetTotalAmountMessagesByChannel query,
+            [FromServices] IQueryHandler<GetTotalAmountMessagesByChannel, int> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(query, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return Ok(result.Value);
+        }
         [HttpGet("All")]
         public async Task<IActionResult> GetAll(
             [FromQuery] GetAllChannelsQuery query,

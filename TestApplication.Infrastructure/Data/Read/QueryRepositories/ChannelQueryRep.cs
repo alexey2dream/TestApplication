@@ -57,5 +57,24 @@ namespace TestApplication.Infrastructure.Data.Read.QueryRepositories
                 new { ChannelId = channelId });
             return channelResponseDictionary.Count() != 0 ? channelResponseDictionary[channelId] : null;
         }
+
+        public async Task<int> GetTotalAmountChannels(CancellationToken token)
+        {
+            using var connection = await connectionFactory.CreateConnection(token);
+            string sql = """
+                select count(*) from "Channels";
+                """;
+            return await connection.QuerySingleAsync<int>(sql);
+        }
+        public async Task<int> GetTotalAmountMessagesByChannelId(int channelId, CancellationToken token)
+        {
+            using var connection = await connectionFactory.CreateConnection(token);
+            string sql = """
+                select count(*) from "Channels" c
+                join "ChannelsMessages" cM on cM."ChannelId" = c."Id"
+                where c."Id" = @ChannelId;
+                """;
+            return await connection.QuerySingleAsync<int>(sql, new { ChannelId = channelId});
+        }
     }
 }

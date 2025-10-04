@@ -11,5 +11,6 @@ namespace TestApplication.UseCase.Users.QueryReps
     {
         Task<List<UserResponse>> GetAll(int pageNum, int pageSize, CancellationToken token = default);
         Task<UserResponse> GetById(int id, CancellationToken token);
+        Task<int> GetTotalAmountUsers();
     }
 }
