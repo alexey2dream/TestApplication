@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.NameTranslation;
 using System.Reflection;
+using TestApplication.Domain.Channels.Services;
 using TestApplication.Domain.Chats.Services;
 using TestApplication.Domain.Users.Services;
 using TestApplication.Infrastructure.Databases.Write;
@@ -40,10 +41,9 @@ namespace TestApplication
             //-»зменение названи€ чата; -d.
             //-”даление чата -> проверка, €вл€етс€ ли удал€ющий создателем этого чата:include; -d.
             //-Ќаписание сообщени€ в чате -> проверка, €вл€етс€ есть ли отправл€щий в чате:include; -d.
-            //-»зменение сообщени€ в чате; -... .
             //-”даление сообщени€ в чате -> проверка, прошла ли минуты с написани€ сообщени€:include; -d.
-            //-—оздание канала -> проверка уникальности названи€:include; -... .
-            //-»зменение названи€ канала -> проверка уникальности названи€:include; -... .
+            //-—оздание канала -> проверка уникальности названи€:include; -d.
+            //-»зменение названи€ канала -> проверка уникальности названи€:include; -p.
             //-”даление канала -> проверка, €вл€етс€ ли удал€ющий создателем этого канала:include; -... .
             //-Ќаписание сообщени€ в канале -> проверка:include; -... .
             //-»зменение сообщени€ в канале -> проверка:include; -... .
@@ -97,6 +97,7 @@ namespace TestApplication
                         .WithScopedLifetime());
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<ChatService>();
+            builder.Services.AddScoped<ChannelService>();
             //builder.Services.AddScoped<UserService>();
             builder.Services.Scan(
                 scan => scan.FromAssembliesOf(typeof(ICommandHandler<>))
