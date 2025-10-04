@@ -4,6 +4,9 @@ using TestApplication.UseCase.Chats.Commands.DeleteChatCommand;
 using TestApplication.UseCase.Users.Commands.BanUserCommand;
 using TestApplication.UseCase.Users.Commands.ChangeUserUsernameCommand;
 using TestApplication.UseCase.Users.Commands.CreateUserCommand;
+using TestApplication.UseCase.Users.DTO;
+using TestApplication.UseCase.Users.Queries.GetAllUsersQuery;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace TestApplication.Controllers
 {
@@ -11,6 +14,17 @@ namespace TestApplication.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        [HttpGet("All")]
+        public async Task<IActionResult> GetAll(
+            [FromQuery]GetAllUsersQuery query,
+            [FromServices] IQueryHandler<GetAllUsersQuery, List<UserResponse>> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(query, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return Ok(result.Value);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateUser(
             [FromBody]CreateUserCommand command,

@@ -16,9 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Channels\DTO\" />
     <Folder Include="Channels\Queries\" />
+    <Folder Include="Channels\QueryReps\" />
+    <Folder Include="Chats\DTO\" />
     <Folder Include="Chats\Queries\" />
-    <Folder Include="Users\Queries\" />
+    <Folder Include="Chats\QueryReps\" />
   </ItemGroup>
 
 </Project>

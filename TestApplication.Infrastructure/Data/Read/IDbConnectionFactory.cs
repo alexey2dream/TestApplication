@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TestApplication.Infrastructure.Databases.Read
 {
-    internal interface IDbConnectionFactory
+    public interface IDbConnectionFactory
     {
+        Task<IDbConnection> CreateConnection(CancellationToken token = default);
     }
 }

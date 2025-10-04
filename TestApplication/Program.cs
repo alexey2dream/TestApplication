@@ -5,6 +5,8 @@ using System.Reflection;
 using TestApplication.Domain.Channels.Services;
 using TestApplication.Domain.Chats.Services;
 using TestApplication.Domain.Users.Services;
+using TestApplication.Infrastructure.Data.Read;
+using TestApplication.Infrastructure.Databases.Read;
 using TestApplication.Infrastructure.Databases.Write;
 using TestApplication.UseCase.Abstractions.Behaviors;
 using TestApplication.UseCase.Abstractions.Messaging;
@@ -47,8 +49,8 @@ namespace TestApplication
             //-Удаление канала -> проверка, является ли удаляющий создателем этого канала:include; -d.
             //-Написание сообщения в канале -> проверка:include; -d.
             //-Удаление сообщения в канале -> проверка:include; -d.
-            //-Получение списка всех пользователей; -... .
-            //-Получение списка всех своих чатов; -... .
+            //-Получение списка всех пользователей; -d.
+            //-Получение списка всех своих чатов; -p.
             //-Получение списка всех каналов; -... .
             //-Просмотр конкретного пользователя; -... .
             //-Просмотр конкретного пользователя; -... .
@@ -79,8 +81,6 @@ namespace TestApplication
 
 
 
-
-
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
@@ -89,16 +89,16 @@ namespace TestApplication
 
             builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
             builder.Services.AddScoped<AppDbContext>();
-            builder.Services.Scan(
+            builder.Services.AddScoped<IDbConnectionFactory, NpgsqlConnectionFactory>();
+            builder.Services.Scan(  // Регистрация всех репозиториев
                 scan => scan.FromAssembliesOf(typeof(AppDbContext))
                     .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Rep")))
                         .AsMatchingInterface()
                         .WithScopedLifetime());
-            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<UserService>();  // Доменные сервисы
             builder.Services.AddScoped<ChatService>();
             builder.Services.AddScoped<ChannelService>();
-            //builder.Services.AddScoped<UserService>();
-            builder.Services.Scan(
+            builder.Services.Scan(  // Регистрация всех обработчиков запросов
                 scan => scan.FromAssembliesOf(typeof(ICommandHandler<>))
                     .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)))
                         .AsImplementedInterfaces()
@@ -109,12 +109,15 @@ namespace TestApplication
                     .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)))
                         .AsImplementedInterfaces()
                         .WithScopedLifetime());
+            // Регистрация надстройки(логгирование и валидация) обработчиков запросов
             builder.Services.Decorate(typeof(ICommandHandler<>), typeof(ValidationBehaviorDecorator.CommandHandler<>));
-            //builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationBehaviorDecorator.CommandHandler<,>));
-            //builder.Services.Decorate(typeof(IQueryHandler<,>), typeof(ValidationBehaviorDecorator.QueryHandler<,>));
+            // ICommandHandler<,> в комментарии, т.к. для декоратора нужен минимум 1 экземпляр обработчика, в моем случае
+            //не было нужды создавать обработчик с возращаемым значением.
+            //builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationBehaviorDecorator.CommandHandler<,>)); 
+            builder.Services.Decorate(typeof(IQueryHandler<,>), typeof(ValidationBehaviorDecorator.QueryHandler<,>));
             builder.Services.Decorate(typeof(ICommandHandler<>), typeof(LoggingBehaviorDecorator.CommandHandler<>));
             //builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(LoggingBehaviorDecorator.CommandHandler<,>));
-            //builder.Services.Decorate(typeof(IQueryHandler<,>), typeof(LoggingBehaviorDecorator.QueryHandler<,>));
+            builder.Services.Decorate(typeof(IQueryHandler<,>), typeof(LoggingBehaviorDecorator.QueryHandler<,>));
 
 
             var app = builder.Build();
@@ -124,7 +127,7 @@ namespace TestApplication
             app.UseSwaggerUI();
 
             if (app.Environment.IsDevelopment())
-            {
+            {  // Подтягивание миграций при запуске программы
                 using var scope = app.Services.CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 dbContext.Database.Migrate();
