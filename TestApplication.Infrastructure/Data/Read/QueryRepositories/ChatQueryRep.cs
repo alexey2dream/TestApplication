@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestApplication.Domain.Users.Models;
 using TestApplication.Infrastructure.Databases.Read;
 using TestApplication.UseCase.Chats.DTO;
 using TestApplication.UseCase.Chats.QueryReps;
@@ -33,6 +34,28 @@ namespace TestApplication.Infrastructure.Data.Read.QueryRepositories
                 CreatorId = userId
             });
             return chats.ToList();
+        }
+        public async Task<ChatInfoResponse> GetByIdWithAllPages(int chatId, CancellationToken token)
+        {
+            using var connection = await connectionFactory.CreateConnection(token);
+            string sql = """
+                select * from "Chats" c
+                join "ChatsMessages" cM on cM."ChatId" = c."Id"
+                where c."Id" = @ChatId;
+                """;
+            Dictionary<int, ChatInfoResponse> chatResponseDictionary = new Dictionary<int, ChatInfoResponse>();
+            var chats = await connection.QueryAsync<ChatInfoResponse, ChatMessageResponse, ChatInfoResponse>(sql,
+                (chat, message) =>
+                {
+                    if(chatResponseDictionary.TryGetValue(chatId, out var existingChat))
+                        chat = existingChat;
+                    else
+                        chatResponseDictionary.Add(chat.Id, chat);
+                    chat.Messages.Add(message);
+                    return chat;
+                },
+                new{ChatId = chatId});
+            return chatResponseDictionary.Count() != 0 ? chatResponseDictionary[chatId] : null;
         }
     }
 }

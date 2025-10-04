@@ -10,5 +10,6 @@ namespace TestApplication.UseCase.Chats.QueryReps
     public interface IChatQueryRep
     {
         Task<List<ChatResponse>> GetAllByUserId(int userId, int pageNum, int pageSize, CancellationToken token);
+        Task<ChatInfoResponse> GetByIdWithAllPages(int chatId, CancellationToken token);
     }
 }
