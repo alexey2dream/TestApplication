@@ -3,6 +3,8 @@ using TestApplication.UseCase.Abstractions.Messaging;
 using TestApplication.UseCase.Chats.Commands.CreateChatCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatMessageCommand;
+using TestApplication.UseCase.Chats.Commands.UpdateChatTitleCommand;
+using TestApplication.UseCase.Users.Commands.ChangeUserUsernameCommand;
 using TestApplication.UseCase.Users.Commands.CreateUserCommand;
 
 namespace TestApplication.Controllers
@@ -21,6 +23,17 @@ namespace TestApplication.Controllers
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
             return Created();
+        }
+        [HttpPut("Title")]
+        public async Task<IActionResult> UpdateTitle(
+            [FromBody] UpdateChatTitleCommand command,
+            [FromServices] ICommandHandler<UpdateChatTitleCommand> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(command, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return NoContent();
         }
         [HttpDelete]
         public async Task<IActionResult> CreateUser(

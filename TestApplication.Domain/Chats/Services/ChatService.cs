@@ -24,6 +24,13 @@ namespace TestApplication.Domain.Chats.Services
             }
             return result;
         }
+        public Result UpdateTitle(Chat chat, string newTitle)
+        {
+            var result = chat.ChangeTitle(newTitle);
+            if (!result.IsSuccess) 
+                return result;
+            return result;
+        }
         public Result Delete(User creator, Chat chat)
         {
             var deleteResult = creator.DeleteChat(chat);

@@ -44,6 +44,13 @@ namespace TestApplication.Domain.Chats.Models
             participants.Add(user);
             return Result.Success();
         }
+        internal Result ChangeTitle(string newTitle)
+        {
+            if (string.IsNullOrWhiteSpace(newTitle))
+                return Result.Failure("NewTitle is null or empty!");
+            Title = newTitle;
+            return Result.Success();
+        }
 
         //internal Result AddMessage(ChatMessage message)
         //{
