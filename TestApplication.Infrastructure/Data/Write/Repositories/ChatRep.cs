@@ -10,13 +10,22 @@ using TestApplication.Infrastructure.Databases.Write;
 
 namespace TestApplication.Infrastructure.Data.Write.Repositories
 {
-    public class ChatRep :IChatRep
+    public class ChatRep : IChatRep
     {
         private readonly AppDbContext context;
         public ChatRep(AppDbContext context)
         {
             this.context = context;
         }
+
+        public async Task<bool> Add(Chat chat, CancellationToken token = default)
+        {
+            if (chat == null)
+                return false;
+            await context.Chats.AddAsync(chat, token);
+            return true;
+        }
+
         public async Task<Chat> GetById(int id, CancellationToken token = default)
         {
             return await context.Chats

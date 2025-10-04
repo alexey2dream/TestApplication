@@ -11,6 +11,19 @@ namespace TestApplication.Domain.Chats.Services
 {
     public class ChatService
     {
+        public Result<Chat> Create(string title, User creator, List<User> participants)
+        {
+            var result = Chat.Create(title, creator);
+            if (!result.IsSuccess)
+                return result;
+            foreach(var u in participants)
+            {
+                var addChatParticipantResult = result.Value.AddParticipant(u);
+                if (!addChatParticipantResult.IsSuccess)
+                    return Result<Chat>.Failure(addChatParticipantResult.Error);
+            }
+            return result;
+        }
         public Result Delete(User creator, Chat chat)
         {
             var deleteResult = creator.DeleteChat(chat);

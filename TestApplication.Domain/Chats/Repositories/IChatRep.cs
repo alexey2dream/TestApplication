@@ -11,6 +11,7 @@ namespace TestApplication.Domain.Chats.Repositories
     public interface IChatRep
     {
         Task<Chat> GetById(int id, CancellationToken token = default);
+        Task<bool> Add(Chat chat, CancellationToken token = default);
         int Save();
 
     }

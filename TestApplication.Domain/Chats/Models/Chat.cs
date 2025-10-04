@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,10 +20,30 @@ namespace TestApplication.Domain.Chats.Models
         private readonly List<ChatMessage> messages = new List<ChatMessage>();
         public IReadOnlyCollection<ChatMessage> Messages => messages.AsReadOnly();
         private Chat() { }
-        //private Chat()
-        //{
-
-        //}
+        private Chat(string title, int creatorId)
+        {
+            Title = title;
+            CreatorId = creatorId;
+        }
+        internal static Result<Chat> Create(string title, User creator)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                return Result<Chat>.Failure("Title is null or empty!");
+            if (creator is null)
+                return Result<Chat>.Failure("Creator is null!");
+            return Result<Chat>.Success(new Chat(title, creator.Id));
+        }
+        internal Result AddParticipant(User user)
+        {
+            if (user is null)
+                return Result.Failure("User is null!");
+            if(user.Id == CreatorId)
+                return Result.Failure("Can't add creator as participant!");
+            if(participants.Contains(user))
+                return Result.Failure("User already added to chat!");
+            participants.Add(user);
+            return Result.Success();
+        }
 
         //internal Result AddMessage(ChatMessage message)
         //{
