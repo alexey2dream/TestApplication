@@ -39,5 +39,19 @@ namespace TestApplication.Domain.Channels.Models
             Title = newTitle;
             return Result.Success();
         }
+        internal Result AddMessage(ChannelMessage message)
+        {
+            if (message is null)
+                return Result.Failure("Message is null!");
+            messages.Add(message);
+            return Result.Success();
+        }
+        internal Result DeleteMessage(ChannelMessage message)
+        {
+            if (!messages.Contains(message))
+                return Result.Failure("Not that's channel message!");
+            messages.Remove(message);
+            return Result.Success();
+        }
     }
 }

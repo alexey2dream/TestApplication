@@ -68,7 +68,6 @@ namespace TestApplication.Domain.Chats.Models
             messages.Add(message);
             return Result.Success();
         }
-
         internal Result DeleteMessage(ChatMessage message)
         {
             if (!messages.Contains(message))

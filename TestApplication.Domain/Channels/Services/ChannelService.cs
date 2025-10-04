@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestApplication.Domain.Channels.Models;
 using TestApplication.Domain.Channels.Repositories;
+using TestApplication.Domain.Chats.Models;
 using TestApplication.Domain.Results;
 using TestApplication.Domain.Users.Models;
 
@@ -35,10 +36,26 @@ namespace TestApplication.Domain.Channels.Services
                 return result;
             return result;
         }
-
         public Result Delete(User user, Channel channel)
         {
             var deleteResult = user.DeleteChannel(channel);
+            if (!deleteResult.IsSuccess)
+                return deleteResult;
+            return deleteResult;
+        }
+        public Result CreateMessage(string text, Channel channel)
+        {
+            var result = ChannelMessage.Create(text, channel);
+            if (!result.IsSuccess)
+                return result;
+            var addChannelMessageResult = channel.AddMessage(result.Value);
+            if (!addChannelMessageResult.IsSuccess)
+                return addChannelMessageResult;
+            return result;
+        }
+        public Result DeleteMessage(Channel channel, ChannelMessage message)
+        {
+            var deleteResult = channel.DeleteMessage(message);
             if (!deleteResult.IsSuccess)
                 return deleteResult;
             return deleteResult;

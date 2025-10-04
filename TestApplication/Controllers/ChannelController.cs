@@ -2,9 +2,13 @@
 using TestApplication.UseCase.Abstractions.Messaging;
 using TestApplication.UseCase.Channels.Commands.ChangeTitleChannelCommand;
 using TestApplication.UseCase.Channels.Commands.CreateChannelCommand;
+using TestApplication.UseCase.Channels.Commands.CreateChannelMessageCommand;
 using TestApplication.UseCase.Channels.Commands.DeleteChannelCommand;
+using TestApplication.UseCase.Channels.Commands.DeleteChannelMessageCommand;
 using TestApplication.UseCase.Chats.Commands.CreateChatCommand;
+using TestApplication.UseCase.Chats.Commands.CreateChatMessageCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatCommand;
+using TestApplication.UseCase.Chats.Commands.DeleteChatMessageCommand;
 using TestApplication.UseCase.Chats.Commands.UpdateChatTitleCommand;
 
 namespace TestApplication.Controllers
@@ -39,6 +43,28 @@ namespace TestApplication.Controllers
         public async Task<IActionResult> Delete(
             [FromQuery] DeleteChannelCommand command,
             [FromServices] ICommandHandler<DeleteChannelCommand> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(command, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return NoContent();
+        }
+        [HttpPost("Message")]
+        public async Task<IActionResult> CreateMessage(
+            [FromBody] CreateChannelMessageCommand command,
+            [FromServices] ICommandHandler<CreateChannelMessageCommand> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(command, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return Created();
+        }
+        [HttpDelete("Message")]
+        public async Task<IActionResult> CreateUser(
+            [FromQuery] DeleteChannelMessageCommand command,
+            [FromServices] ICommandHandler<DeleteChannelMessageCommand> handler,
             CancellationToken token)
         {
             var result = await handler.Handle(command, token);
