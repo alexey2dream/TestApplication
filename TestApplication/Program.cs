@@ -78,9 +78,14 @@ namespace TestApplication
 
 
 
+            ///TODO: щас проверить в юзкейс сценари€х работу декораторов.
+            ///TODO: также щас вы€снить, стоит ли доменный сервис добавл€ть или нет.
+            ///ѕерейти после регистрации пользовател€ сразу к сложным сценари€м, попробывать реализовать, если
+            ///сложности возникнут, то делать просто через UseCase.
+
+
             var builder = WebApplication.CreateBuilder(args);
 
-            ///TODO: проверить потом на юзкейс сценари€х работу декораторов.
             builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
             builder.Services.AddScoped<AppDbContext>();
             builder.Services.Scan(
