@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestApplication.Domain.Results;
 using TestApplication.Domain.Users.Models;
 
 namespace TestApplication.Domain.Chats.Models
@@ -20,9 +21,25 @@ namespace TestApplication.Domain.Chats.Models
         private Chat() { }
         //private Chat()
         //{
-            
+
         //}
 
+        //internal Result AddMessage(ChatMessage message)
+        //{
+        //    if (message is null)
+        //        return Result.Failure("Message is null!");
+        //    messages.Add(message);
+        //    return Result.Success();
+        //}
 
+        internal Result DeleteMessage(ChatMessage message)
+        {
+            if (!messages.Contains(message))
+                return Result.Failure("Not that's chat message!");
+            if(message.SendingTime.AddMinutes(1) < DateTime.UtcNow)
+                return Result.Failure("Too late for message deleting!");
+            messages.Remove(message);
+            return Result.Success();
+        }
     }
 }

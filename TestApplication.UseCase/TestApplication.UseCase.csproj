@@ -18,7 +18,6 @@
   <ItemGroup>
     <Folder Include="Channels\Commands\" />
     <Folder Include="Channels\Queries\" />
-    <Folder Include="Chats\Commands\" />
     <Folder Include="Chats\Queries\" />
     <Folder Include="Users\Queries\" />
   </ItemGroup>

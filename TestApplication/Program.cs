@@ -2,6 +2,8 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.NameTranslation;
 using System.Reflection;
+using TestApplication.Domain.Chats.Services;
+using TestApplication.Domain.Users.Services;
 using TestApplication.Infrastructure.Databases.Write;
 using TestApplication.UseCase.Abstractions.Behaviors;
 using TestApplication.UseCase.Abstractions.Messaging;
@@ -32,14 +34,14 @@ namespace TestApplication
 
             ///UseCase scenarios(сценарии использовани€):
             //  -ѕользователь:
-            //-–егистраци€ -> проверка уникальности имени:include; -p.
+            //-–егистраци€ -> проверка уникальности имени:include; -d.
             //-»зменение имени -> проверка уникальности имени:include; -... .
             //-—оздание чата -> проверка наличи€ минимум 2ух пользователей:include; -... .
             //-»зменение названи€ чата; -... . 
-            //-”даление чата -> проверка, €вл€етс€ ли удал€ющий создателем этого чата:include; -... .
+            //-”даление чата -> проверка, €вл€етс€ ли удал€ющий создателем этого чата:include; -d.
             //-Ќаписание сообщени€ в чате; -... .
             //-»зменение сообщени€ в чате; -... .
-            //-”даление сообщени€ в чате -> проверка, прошла ли минуты с написани€ сообщени€:include; -... .
+            //-”даление сообщени€ в чате -> проверка, прошла ли минуты с написани€ сообщени€:include; -p.
             //-—оздание канала -> проверка уникальности названи€:include; -... .
             //-»зменение названи€ канала -> проверка уникальности названи€:include; -... .
             //-”даление канала -> проверка, €вл€етс€ ли удал€ющий создателем этого канала:include; -... .
@@ -78,7 +80,7 @@ namespace TestApplication
 
 
 
-            ///TODO: щас проверить в юзкейс сценари€х работу декораторов.
+            ///TODO: переделать потом декоратор валидации на список валидаторов.
             ///TODO: также щас вы€снить, стоит ли доменный сервис добавл€ть или нет.
             ///ѕерейти после регистрации пользовател€ сразу к сложным сценари€м, попробывать реализовать, если
             ///сложности возникнут, то делать просто через UseCase.
@@ -86,13 +88,20 @@ namespace TestApplication
 
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
             builder.Services.AddScoped<AppDbContext>();
             builder.Services.Scan(
                 scan => scan.FromAssembliesOf(typeof(AppDbContext))
-                    .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Repository")))
+                    .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Rep")))
                         .AsMatchingInterface()
                         .WithScopedLifetime());
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<ChatService>();
+            //builder.Services.AddScoped<UserService>();
             builder.Services.Scan(
                 scan => scan.FromAssembliesOf(typeof(ICommandHandler<>))
                     .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)))
@@ -115,6 +124,9 @@ namespace TestApplication
 
             var app = builder.Build();
 
+            app.MapControllers();
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             if (app.Environment.IsDevelopment())
             {

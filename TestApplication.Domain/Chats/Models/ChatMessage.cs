@@ -17,9 +17,9 @@ namespace TestApplication.Domain.Chats.Models
         public int ChatId { get; private set; }
         public Chat Chat { get; private set; }
         private ChatMessage() { }
-        //private ChatMessage()
+        //private ChatMessage(string text, DateTime sendingTime, int senderId, int chatId)
         //{
-            
+
         //}
 
     }

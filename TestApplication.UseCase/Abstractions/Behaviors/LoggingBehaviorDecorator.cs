@@ -25,7 +25,7 @@ namespace TestApplication.UseCase.Abstractions.Behaviors
                 if (!result.IsSuccess)
                     logger.LogError($"Request ended with error: {requestName}");
                 else
-                    logger.LogError($"Request completed: {requestName}");
+                    logger.LogInformation($"Request completed: {requestName}");
                 return result;
             }
         }
@@ -43,7 +43,7 @@ namespace TestApplication.UseCase.Abstractions.Behaviors
                 if (!result.IsSuccess)
                     logger.LogError($"Request ended with error: {requestName}");
                 else
-                    logger.LogError($"Request completed: {requestName}");
+                    logger.LogInformation($"Request completed: {requestName}");
                 return result;
             }
         }
@@ -61,7 +61,7 @@ namespace TestApplication.UseCase.Abstractions.Behaviors
                 if (!result.IsSuccess)
                     logger.LogError($"Request ended with error: {requestName}");
                 else
-                    logger.LogError($"Request completed: {requestName}");
+                    logger.LogInformation($"Request completed: {requestName}");
                 return result;
             }
         }

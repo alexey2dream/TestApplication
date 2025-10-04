@@ -9,10 +9,6 @@
   <ItemGroup>
     <Folder Include="Channels\Repositories\" />
     <Folder Include="Channels\Services\" />
-    <Folder Include="Chats\Repositories\" />
-    <Folder Include="Chats\Services\" />
-    <Folder Include="Users\Services\" />
-    <Folder Include="Users\Repositories\" />
   </ItemGroup>
 
 </Project>

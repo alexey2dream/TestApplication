@@ -12,7 +12,9 @@ namespace TestApplication.UseCase.Users.Commands.CreateUserCommand
     {
         public CreateUserCommandValidator()
         {
-            //RuleFor(c => c.);
+            RuleFor(c => c.Username)
+                .NotNull().WithMessage("Username is null!")
+                .NotEmpty().WithMessage("Username is empty!");
         }
     }
 }

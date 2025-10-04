@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Read\QueryRepositories\" />
-    <Folder Include="Data\Write\Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
