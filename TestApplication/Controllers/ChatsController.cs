@@ -5,8 +5,12 @@ using TestApplication.UseCase.Chats.Commands.CreateChatMessageCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatMessageCommand;
 using TestApplication.UseCase.Chats.Commands.UpdateChatTitleCommand;
+using TestApplication.UseCase.Chats.DTO;
+using TestApplication.UseCase.Chats.Queries.GetUserAllChatsQuery;
 using TestApplication.UseCase.Users.Commands.ChangeUserUsernameCommand;
 using TestApplication.UseCase.Users.Commands.CreateUserCommand;
+using TestApplication.UseCase.Users.DTO;
+using TestApplication.UseCase.Users.Queries.GetAllUsersQuery;
 
 namespace TestApplication.Controllers
 {
@@ -14,6 +18,17 @@ namespace TestApplication.Controllers
     [ApiController]
     public class ChatsController : ControllerBase
     {
+        [HttpGet("ByUserId")]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] GetAllChatsByUserQuery query,
+            [FromServices] IQueryHandler<GetAllChatsByUserQuery, List<ChatResponse>> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(query, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return Ok(result.Value);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateChat(
             [FromBody] CreateChatCommand command,

@@ -20,6 +20,8 @@ namespace TestApplication.Domain.Channels.Services
         }
         public async Task<Result<Channel>> Create(string title, User creator, CancellationToken token)
         {
+            if (creator.Channel != null)
+                return Result<Channel>.Failure("User already have channel!");
             if (!await rep.IsTitleUnique(title))
                 return Result<Channel>.Failure("Title is taken!");
             var result = Channel.Create(title, creator);

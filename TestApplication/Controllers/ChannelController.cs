@@ -5,11 +5,15 @@ using TestApplication.UseCase.Channels.Commands.CreateChannelCommand;
 using TestApplication.UseCase.Channels.Commands.CreateChannelMessageCommand;
 using TestApplication.UseCase.Channels.Commands.DeleteChannelCommand;
 using TestApplication.UseCase.Channels.Commands.DeleteChannelMessageCommand;
+using TestApplication.UseCase.Channels.DTO;
+using TestApplication.UseCase.Channels.Queries.GetAllChannelsQuery;
 using TestApplication.UseCase.Chats.Commands.CreateChatCommand;
 using TestApplication.UseCase.Chats.Commands.CreateChatMessageCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatMessageCommand;
 using TestApplication.UseCase.Chats.Commands.UpdateChatTitleCommand;
+using TestApplication.UseCase.Users.DTO;
+using TestApplication.UseCase.Users.Queries.GetAllUsersQuery;
 
 namespace TestApplication.Controllers
 {
@@ -17,6 +21,17 @@ namespace TestApplication.Controllers
     [ApiController]
     public class ChannelController : ControllerBase
     {
+        [HttpGet("All")]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] GetAllChannelsQuery query,
+            [FromServices] IQueryHandler<GetAllChannelsQuery, List<ChannelResponse>> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(query, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return Ok(result.Value);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateChannel(
             [FromBody] CreateChannelCommand command,
