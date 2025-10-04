@@ -81,8 +81,6 @@ namespace TestApplication
 
 
 
-            ///TODO: fix- декоратор валидации на список валидаторов.
-
 
             var builder = WebApplication.CreateBuilder(args);
 
