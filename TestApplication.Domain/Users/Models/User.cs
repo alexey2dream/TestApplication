@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestApplication.Domain.Channels.Models;
 using TestApplication.Domain.Chats.Models;
+using TestApplication.Domain.Results;
 
 namespace TestApplication.Domain.Users.Models
 {
@@ -18,9 +19,16 @@ namespace TestApplication.Domain.Users.Models
         public IReadOnlyCollection<Chat> JoinedChats => joinedChats.AsReadOnly();
         public Channel? Channel { get; private set; }
         private User() { }
-        //private User()
-        //{
-        //}
+        private User(string username)
+        {
+            Username = username;
+        }
+        internal static Result<User> Create(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                return Result<User>.Failure("Username is null or empty!");
+            return Result<User>.Success(new User(username));
+        }
 
     }
 }

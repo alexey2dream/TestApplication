@@ -1,9 +1,11 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.NameTranslation;
 using System.Reflection;
 using TestApplication.Infrastructure.Databases.Write;
 using TestApplication.UseCase.Abstractions.Behaviors;
 using TestApplication.UseCase.Abstractions.Messaging;
+using TestApplication.UseCase.Users.Commands.CreateUserCommand;
 
 namespace TestApplication
 {
@@ -30,7 +32,7 @@ namespace TestApplication
 
             ///UseCase scenarios(сценарии использования):
             //  -Пользователь:
-            //-Регистрация -> проверка уникальности имени:include; -... .
+            //-Регистрация -> проверка уникальности имени:include; -p.
             //-Изменение имени -> проверка уникальности имени:include; -... .
             //-Создание чата -> проверка наличия минимум 2ух пользователей:include; -... .
             //-Изменение названия чата; -... . 
@@ -78,7 +80,8 @@ namespace TestApplication
 
             var builder = WebApplication.CreateBuilder(args);
 
-            
+            ///TODO: проверить потом на юзкейс сценариях работу декораторов.
+            builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
             builder.Services.AddScoped<AppDbContext>();
             builder.Services.Scan(
                 scan => scan.FromAssembliesOf(typeof(AppDbContext))
@@ -98,11 +101,11 @@ namespace TestApplication
                         .WithScopedLifetime()
                 );
             builder.Services.Decorate(typeof(ICommandHandler<>), typeof(ValidationBehaviorDecorator.CommandHandler<>));
-            builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationBehaviorDecorator.CommandHandler<,>));
-            builder.Services.Decorate(typeof(IQueryHandler<,>), typeof(ValidationBehaviorDecorator.QueryHandler<,>));
+            //builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationBehaviorDecorator.CommandHandler<,>));
+            //builder.Services.Decorate(typeof(IQueryHandler<,>), typeof(ValidationBehaviorDecorator.QueryHandler<,>));
             builder.Services.Decorate(typeof(ICommandHandler<>), typeof(LoggingBehaviorDecorator.CommandHandler<>));
-            builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(LoggingBehaviorDecorator.CommandHandler<,>));
-            builder.Services.Decorate(typeof(IQueryHandler<,>), typeof(LoggingBehaviorDecorator.QueryHandler<,>));
+            //builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(LoggingBehaviorDecorator.CommandHandler<,>));
+            //builder.Services.Decorate(typeof(IQueryHandler<,>), typeof(LoggingBehaviorDecorator.QueryHandler<,>));
 
 
             var app = builder.Build();

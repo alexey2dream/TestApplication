@@ -15,4 +15,12 @@
     <ProjectReference Include="..\TestApplication.Domain\TestApplication.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Channels\Commands\" />
+    <Folder Include="Channels\Queries\" />
+    <Folder Include="Chats\Commands\" />
+    <Folder Include="Chats\Queries\" />
+    <Folder Include="Users\Queries\" />
+  </ItemGroup>
+
 </Project>
