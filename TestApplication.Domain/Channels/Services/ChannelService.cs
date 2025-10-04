@@ -26,5 +26,14 @@ namespace TestApplication.Domain.Channels.Services
                 return result;
             return result;
         }
+        public async Task<Result> ChangeTitle(string newTitle, Channel channel, CancellationToken token)
+        {
+            if (!await rep.IsTitleUnique(newTitle))
+                return Result<Channel>.Failure("Title is taken!");
+            var result = channel.ChangeTitle(newTitle);
+            if (!result.IsSuccess)
+                return result;
+            return result;
+        }
     }
 }

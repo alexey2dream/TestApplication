@@ -17,6 +17,12 @@ namespace TestApplication.Infrastructure.Data.Write.Repositories
         {
             this.context = context;
         }
+        public async Task<Channel> GetById(int id, CancellationToken token)
+        {
+            return await context.Channels
+                .Where(c => c.Id == id)
+                .FirstOrDefaultAsync(token);
+        }
         public async Task<bool> Add(Channel channel, CancellationToken token = default)
         {
             if (channel is null)

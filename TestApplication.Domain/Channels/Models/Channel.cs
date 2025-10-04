@@ -32,7 +32,12 @@ namespace TestApplication.Domain.Channels.Models
                 return Result<Channel>.Failure("Creator is null!");
             return Result<Channel>.Success(new Channel(title, creator.Id));
         }
-
-
+        internal Result ChangeTitle(string newTitle)
+        {
+            if (string.IsNullOrWhiteSpace(newTitle))
+                return Result.Failure("NewTitle is null or empty!");
+            Title = newTitle;
+            return Result.Success();
+        }
     }
 }

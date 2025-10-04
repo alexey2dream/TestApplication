@@ -9,9 +9,9 @@ namespace TestApplication.Domain.Channels.Repositories
 {
     public interface IChannelRep
     {
+        Task<Channel> GetById(int id, CancellationToken token);
         Task<bool> Add(Channel channel, CancellationToken token = default);
         int Save();
         Task<bool> IsTitleUnique(string title, CancellationToken token = default);
-
     }
 }
