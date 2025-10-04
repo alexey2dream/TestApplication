@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestApplication.UseCase.Abstractions.Messaging;
 using TestApplication.UseCase.Chats.Commands.CreateChatCommand;
+using TestApplication.UseCase.Chats.Commands.CreateChatMessageCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatCommand;
 using TestApplication.UseCase.Chats.Commands.DeleteChatMessageCommand;
 using TestApplication.UseCase.Chats.Commands.UpdateChatTitleCommand;
@@ -45,6 +46,17 @@ namespace TestApplication.Controllers
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
             return NoContent();
+        }
+        [HttpPost("Message")]
+        public async Task<IActionResult> CreateMessage(
+            [FromBody] CreateChatMessageCommand command,
+            [FromServices] ICommandHandler<CreateChatMessageCommand> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(command, token);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return Created();
         }
         [HttpDelete("Message")]
         public async Task<IActionResult> CreateUser(

@@ -29,6 +29,8 @@ namespace TestApplication.Infrastructure.Data.Write.Repositories
         public async Task<Chat> GetById(int id, CancellationToken token = default)
         {
             return await context.Chats
+                .Include(p => p.Creator)
+                .Include(p => p.Participants)
                 .Where(c => c.Id == id)
                 .FirstOrDefaultAsync(token);
         }

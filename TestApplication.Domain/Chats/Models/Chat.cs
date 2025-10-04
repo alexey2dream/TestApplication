@@ -51,14 +51,23 @@ namespace TestApplication.Domain.Chats.Models
             Title = newTitle;
             return Result.Success();
         }
-
-        //internal Result AddMessage(ChatMessage message)
-        //{
-        //    if (message is null)
-        //        return Result.Failure("Message is null!");
-        //    messages.Add(message);
-        //    return Result.Success();
-        //}
+        internal bool IsUserExists(User user)
+        {
+            if (user == null)
+                return false;
+            if (user.Id == CreatorId)
+                return true;
+            if (participants.Contains(user))
+                return true;
+            return false;
+        }
+        internal Result AddMessage(ChatMessage message)
+        {
+            if (message is null)
+                return Result.Failure("Message is null!");
+            messages.Add(message);
+            return Result.Success();
+        }
 
         internal Result DeleteMessage(ChatMessage message)
         {
