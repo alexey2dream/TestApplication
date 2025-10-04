@@ -11,7 +11,7 @@ namespace TestApplication.Domain.Users.Repositories
     {
         Task<User> GetById(int id, CancellationToken token = default);
         Task<bool> Add(User user, CancellationToken token = default);
-        //Task<bool> Add(User user, CancellationToken token = default);
+        Task<bool> Delete(User user, CancellationToken token = default);
         int Save();
         Task<bool> IsUsernameUnique(string username, CancellationToken token = default);
 

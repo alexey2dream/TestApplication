@@ -37,7 +37,7 @@ namespace TestApplication.Controllers
             return NoContent();
         }
         [HttpDelete]
-        public async Task<IActionResult> CreateUser(
+        public async Task<IActionResult> Delete(
             [FromQuery] DeleteChatCommand command,
             [FromServices] ICommandHandler<DeleteChatCommand> handler,
             CancellationToken token)
@@ -59,7 +59,7 @@ namespace TestApplication.Controllers
             return Created();
         }
         [HttpDelete("Message")]
-        public async Task<IActionResult> CreateUser(
+        public async Task<IActionResult> DeleteMessage(
             [FromQuery] DeleteChatMessageCommand command,
             [FromServices] ICommandHandler<DeleteChatMessageCommand> handler,
             CancellationToken token)

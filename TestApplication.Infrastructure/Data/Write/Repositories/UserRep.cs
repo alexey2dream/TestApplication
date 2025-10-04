@@ -31,6 +31,13 @@ namespace TestApplication.Infrastructure.Data.Write.Repositories
             await context.Users.AddAsync(user);
             return true;
         }
+        public async Task<bool> Delete(User user, CancellationToken token = default)
+        {
+            if (user == null)
+                return false;
+            context.Users.Remove(user);
+            return true;
+        }
         public int Save()
         {
             return context.SaveChanges();

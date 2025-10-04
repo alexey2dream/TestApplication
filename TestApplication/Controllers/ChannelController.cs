@@ -62,7 +62,7 @@ namespace TestApplication.Controllers
             return Created();
         }
         [HttpDelete("Message")]
-        public async Task<IActionResult> CreateUser(
+        public async Task<IActionResult> DeleteMessage(
             [FromQuery] DeleteChannelMessageCommand command,
             [FromServices] ICommandHandler<DeleteChannelMessageCommand> handler,
             CancellationToken token)

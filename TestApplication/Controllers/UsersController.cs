@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestApplication.UseCase.Abstractions.Messaging;
+using TestApplication.UseCase.Chats.Commands.DeleteChatCommand;
+using TestApplication.UseCase.Users.Commands.BanUserCommand;
 using TestApplication.UseCase.Users.Commands.ChangeUserUsernameCommand;
 using TestApplication.UseCase.Users.Commands.CreateUserCommand;
 
@@ -28,6 +30,17 @@ namespace TestApplication.Controllers
         {
             var result = await handler.Handle(command, token);
             if(!result.IsSuccess)
+                return BadRequest(result.Error);
+            return NoContent();
+        }
+        [HttpDelete("Ban")]
+        public async Task<IActionResult> Ban(
+            [FromQuery] BanUserCommand command,
+            [FromServices] ICommandHandler<BanUserCommand> handler,
+            CancellationToken token)
+        {
+            var result = await handler.Handle(command, token);
+            if (!result.IsSuccess)
                 return BadRequest(result.Error);
             return NoContent();
         }
