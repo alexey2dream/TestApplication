@@ -13,7 +13,7 @@ namespace TestApplication.Domain.Chats.Services
     {
         public Result Delete(User creator, Chat chat)
         {
-            var deleteResult = creator.Delete(chat);
+            var deleteResult = creator.DeleteChat(chat);
             if (!deleteResult.IsSuccess)
                 return deleteResult;
             return deleteResult;

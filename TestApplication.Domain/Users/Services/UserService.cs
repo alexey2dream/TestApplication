@@ -20,5 +20,14 @@ namespace TestApplication.Domain.Users.Services
                 return result;
             return result;
         }
+        public async Task<Result> ChangeUsername(User user, string newUsername, CancellationToken token)
+        {
+            if(!await rep.IsUsernameUnique(newUsername, token))
+                return Result<User>.Failure("Username is taken!");
+            var result = user.ChangeUsername(newUsername);
+            if (!result.IsSuccess)
+                return result;
+            return result;
+        }
     }
 }

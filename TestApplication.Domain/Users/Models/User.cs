@@ -29,12 +29,19 @@ namespace TestApplication.Domain.Users.Models
                 return Result<User>.Failure("Username is null or empty!");
             return Result<User>.Success(new User(username));
         }
-        internal Result Delete(Chat chat)
+        internal Result ChangeUsername(string newUsername)
+        {
+            if (string.IsNullOrWhiteSpace(newUsername))
+                return Result.Failure("Username is null or empty!");
+            Username = newUsername;
+            return Result.Success();
+        }
+        internal Result DeleteChat(Chat chat)
         {
             if (!createdChats.Contains(chat))
                 return Result.Failure("User not created that chat!");
             createdChats.Remove(chat);
             return Result.Success();
-        } 
+        }
     }
 }
