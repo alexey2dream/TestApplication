@@ -41,7 +41,7 @@ namespace TestApplication
             //-Удаление чата -> проверка, является ли удаляющий создателем этого чата:include; -d.
             //-Написание сообщения в чате; -... .
             //-Изменение сообщения в чате; -... .
-            //-Удаление сообщения в чате -> проверка, прошла ли минуты с написания сообщения:include; -p.
+            //-Удаление сообщения в чате -> проверка, прошла ли минуты с написания сообщения:include; -d.
             //-Создание канала -> проверка уникальности названия:include; -... .
             //-Изменение названия канала -> проверка уникальности названия:include; -... .
             //-Удаление канала -> проверка, является ли удаляющий создателем этого канала:include; -... .
@@ -80,10 +80,8 @@ namespace TestApplication
 
 
 
-            ///TODO: переделать потом декоратор валидации на список валидаторов.
-            ///TODO: также щас выяснить, стоит ли доменный сервис добавлять или нет.
-            ///Перейти после регистрации пользователя сразу к сложным сценариям, попробывать реализовать, если
-            ///сложности возникнут, то делать просто через UseCase.
+
+            ///TODO: fix- декоратор валидации на список валидаторов.
 
 
             var builder = WebApplication.CreateBuilder(args);
@@ -112,8 +110,7 @@ namespace TestApplication
                         .WithScopedLifetime()
                     .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)))
                         .AsImplementedInterfaces()
-                        .WithScopedLifetime()
-                );
+                        .WithScopedLifetime());
             builder.Services.Decorate(typeof(ICommandHandler<>), typeof(ValidationBehaviorDecorator.CommandHandler<>));
             //builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationBehaviorDecorator.CommandHandler<,>));
             //builder.Services.Decorate(typeof(IQueryHandler<,>), typeof(ValidationBehaviorDecorator.QueryHandler<,>));
